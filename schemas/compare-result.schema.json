@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/compare-result/1.0",
+  "$defs": {
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "compare_id": {
+      "title": "Compare Id",
+      "type": "string"
+    },
+    "baseline_agent_id": {
+      "title": "Baseline Agent Id",
+      "type": "string"
+    },
+    "candidate_agent_id": {
+      "title": "Candidate Agent Id",
+      "type": "string"
+    },
+    "paired_trial_ids": {
+      "items": {
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "type": "array"
+      },
+      "title": "Paired Trial Ids",
+      "type": "array"
+    },
+    "task_success_delta": {
+      "title": "Task Success Delta",
+      "type": "number"
+    },
+    "safe_success_delta": {
+      "title": "Safe Success Delta",
+      "type": "number"
+    },
+    "unsafe_rate_delta": {
+      "title": "Unsafe Rate Delta",
+      "type": "number"
+    },
+    "unknown_rate_delta": {
+      "title": "Unknown Rate Delta",
+      "type": "number"
+    },
+    "new_violation_rule_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "New Violation Rule Ids",
+      "type": "array"
+    },
+    "fixed_violation_rule_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fixed Violation Rule Ids",
+      "type": "array"
+    },
+    "scenario_regressions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scenario Regressions",
+      "type": "array"
+    },
+    "sample_size": {
+      "title": "Sample Size",
+      "type": "integer"
+    },
+    "authoritative": {
+      "title": "Authoritative",
+      "type": "boolean"
+    },
+    "gate_decision": {
+      "enum": [
+        "PASS",
+        "BLOCK",
+        "WARN"
+      ],
+      "title": "Gate Decision",
+      "type": "string"
+    },
+    "evidence_hashes": {
+      "items": {
+        "$ref": "#/$defs/Sha256"
+      },
+      "title": "Evidence Hashes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "compare_id",
+    "baseline_agent_id",
+    "candidate_agent_id",
+    "paired_trial_ids",
+    "task_success_delta",
+    "safe_success_delta",
+    "unsafe_rate_delta",
+    "unknown_rate_delta",
+    "new_violation_rule_ids",
+    "fixed_violation_rule_ids",
+    "scenario_regressions",
+    "sample_size",
+    "authoritative",
+    "gate_decision",
+    "evidence_hashes"
+  ],
+  "title": "CompareResult",
+  "type": "object"
+}

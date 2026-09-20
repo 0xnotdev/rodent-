@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/stabilization-policy/1.0",
+  "additionalProperties": false,
+  "properties": {
+    "deadline_ms": {
+      "default": 120000,
+      "maximum": 1800000,
+      "minimum": 1000,
+      "title": "Deadline Ms",
+      "type": "integer"
+    },
+    "initial_delay_ms": {
+      "default": 500,
+      "maximum": 60000,
+      "minimum": 0,
+      "title": "Initial Delay Ms",
+      "type": "integer"
+    },
+    "backoff_multiplier": {
+      "default": 1.7,
+      "maximum": 4.0,
+      "minimum": 1.0,
+      "title": "Backoff Multiplier",
+      "type": "number"
+    },
+    "max_delay_ms": {
+      "default": 10000,
+      "maximum": 120000,
+      "minimum": 100,
+      "title": "Max Delay Ms",
+      "type": "integer"
+    },
+    "consecutive_equal_snapshots": {
+      "default": 3,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Consecutive Equal Snapshots",
+      "type": "integer"
+    },
+    "jitter_fraction": {
+      "default": 0.1,
+      "maximum": 0.5,
+      "minimum": 0.0,
+      "title": "Jitter Fraction",
+      "type": "number"
+    }
+  },
+  "title": "StabilizationPolicy",
+  "type": "object"
+}

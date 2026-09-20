@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/parameter-spec/1.0",
+  "$defs": {
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "json_schema": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Json Schema",
+      "type": "object"
+    },
+    "default": {
+      "$ref": "#/$defs/JsonValue",
+      "default": null
+    },
+    "shrink_order": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Shrink Order",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "json_schema"
+  ],
+  "title": "ParameterSpec",
+  "type": "object"
+}

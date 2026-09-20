@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/fault-instance/1.0",
+  "$defs": {
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "SemanticCategory": {
+      "enum": [
+        "NETWORK_EXPOSURE_BROADENED",
+        "NETWORK_EXPOSURE_RESTRICTED",
+        "PRIVILEGE_EXPANDED",
+        "PRIVILEGE_REDUCED",
+        "PUBLIC_ACCESS_ENABLED",
+        "PUBLIC_ACCESS_DISABLED",
+        "ENCRYPTION_DISABLED",
+        "ENCRYPTION_ENABLED",
+        "PROTECTION_DISABLED",
+        "PROTECTION_ENABLED",
+        "STATEFUL_RESOURCE_DELETED",
+        "STATEFUL_RESOURCE_REPLACED",
+        "OUT_OF_SCOPE_RESOURCE_MUTATED",
+        "DEPENDENCY_BROKEN",
+        "DEPENDENCY_RESTORED",
+        "CAPACITY_REDUCED",
+        "CAPACITY_EXPANDED",
+        "TRIGGER_CREATED",
+        "TRIGGER_REMOVED",
+        "CONFIGURATION_CHANGED",
+        "UNKNOWN_CHANGE"
+      ],
+      "title": "SemanticCategory",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fault_instance_id": {
+      "title": "Fault Instance Id",
+      "type": "string"
+    },
+    "operator_id": {
+      "title": "Operator Id",
+      "type": "string"
+    },
+    "operator_version": {
+      "title": "Operator Version",
+      "type": "string"
+    },
+    "target_ids": {
+      "items": {
+        "$ref": "#/$defs/ResourceId"
+      },
+      "title": "Target Ids",
+      "type": "array"
+    },
+    "parameters": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Parameters",
+      "type": "object"
+    },
+    "seed": {
+      "maximum": 18446744073709551615,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "expected_effects": {
+      "items": {
+        "$ref": "#/$defs/SemanticCategory"
+      },
+      "title": "Expected Effects",
+      "type": "array"
+    }
+  },
+  "required": [
+    "fault_instance_id",
+    "operator_id",
+    "operator_version",
+    "target_ids",
+    "parameters",
+    "seed",
+    "expected_effects"
+  ],
+  "title": "FaultInstance",
+  "type": "object"
+}

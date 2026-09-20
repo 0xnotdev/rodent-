@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/mutation-event/1.0",
+  "$defs": {
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Effect": {
+      "additionalProperties": false,
+      "properties": {
+        "effect_id": {
+          "title": "Effect Id",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/SemanticCategory"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "property_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Property Path"
+        },
+        "before": {
+          "$ref": "#/$defs/KnownValue"
+        },
+        "after": {
+          "$ref": "#/$defs/KnownValue"
+        },
+        "risk": {
+          "$ref": "#/$defs/RiskLevel"
+        },
+        "reversible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reversible"
+        },
+        "direct_action_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Direct Action Ids",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "effect_id",
+        "category",
+        "resource_id",
+        "property_path",
+        "before",
+        "after",
+        "risk",
+        "reversible",
+        "direct_action_ids",
+        "evidence",
+        "confidence"
+      ],
+      "title": "Effect",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "KnownValue": {
+      "additionalProperties": false,
+      "properties": {
+        "known": {
+          "title": "Known",
+          "type": "boolean"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "sensitive": {
+          "default": false,
+          "title": "Sensitive",
+          "type": "boolean"
+        },
+        "value_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "known"
+      ],
+      "title": "KnownValue",
+      "type": "object"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "SemanticCategory": {
+      "enum": [
+        "NETWORK_EXPOSURE_BROADENED",
+        "NETWORK_EXPOSURE_RESTRICTED",
+        "PRIVILEGE_EXPANDED",
+        "PRIVILEGE_REDUCED",
+        "PUBLIC_ACCESS_ENABLED",
+        "PUBLIC_ACCESS_DISABLED",
+        "ENCRYPTION_DISABLED",
+        "ENCRYPTION_ENABLED",
+        "PROTECTION_DISABLED",
+        "PROTECTION_ENABLED",
+        "STATEFUL_RESOURCE_DELETED",
+        "STATEFUL_RESOURCE_REPLACED",
+        "OUT_OF_SCOPE_RESOURCE_MUTATED",
+        "DEPENDENCY_BROKEN",
+        "DEPENDENCY_RESTORED",
+        "CAPACITY_REDUCED",
+        "CAPACITY_EXPANDED",
+        "TRIGGER_CREATED",
+        "TRIGGER_REMOVED",
+        "CONFIGURATION_CHANGED",
+        "UNKNOWN_CHANGE"
+      ],
+      "title": "SemanticCategory",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "mutation_event_id": {
+      "title": "Mutation Event Id",
+      "type": "string"
+    },
+    "fault_instance_id": {
+      "title": "Fault Instance Id",
+      "type": "string"
+    },
+    "started_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "ended_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "target_ids": {
+      "items": {
+        "$ref": "#/$defs/ResourceId"
+      },
+      "title": "Target Ids",
+      "type": "array"
+    },
+    "requested_parameters": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Requested Parameters",
+      "type": "object"
+    },
+    "observed_effects": {
+      "items": {
+        "$ref": "#/$defs/Effect"
+      },
+      "title": "Observed Effects",
+      "type": "array"
+    },
+    "success": {
+      "title": "Success",
+      "type": "boolean"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mutation_event_id",
+    "fault_instance_id",
+    "started_at",
+    "ended_at",
+    "target_ids",
+    "requested_parameters",
+    "observed_effects",
+    "success",
+    "evidence"
+  ],
+  "title": "MutationEvent",
+  "type": "object"
+}

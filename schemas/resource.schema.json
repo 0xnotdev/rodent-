@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/resource/1.0",
+  "$defs": {
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "KnownValue": {
+      "additionalProperties": false,
+      "properties": {
+        "known": {
+          "title": "Known",
+          "type": "boolean"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "sensitive": {
+          "default": false,
+          "title": "Sensitive",
+          "type": "boolean"
+        },
+        "value_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "known"
+      ],
+      "title": "KnownValue",
+      "type": "object"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "ResourceCriticality": {
+      "enum": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "CRITICAL",
+        "UNKNOWN"
+      ],
+      "title": "ResourceCriticality",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "ResourceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_id": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "terraform_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terraform Address"
+        },
+        "provider_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Address"
+        },
+        "arn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arn"
+        },
+        "account_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account Id"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "native_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Native Id"
+        }
+      },
+      "required": [
+        "canonical_id"
+      ],
+      "title": "ResourceIdentity",
+      "type": "object"
+    },
+    "ResourceProperty": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "plane": {
+          "$ref": "#/$defs/StatePlane"
+        },
+        "value": {
+          "$ref": "#/$defs/KnownValue"
+        },
+        "normalized_type": {
+          "title": "Normalized Type",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UtcTime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "path",
+        "plane",
+        "value",
+        "normalized_type"
+      ],
+      "title": "ResourceProperty",
+      "type": "object"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "StatePlane": {
+      "enum": [
+        "DECLARED",
+        "ACTUAL",
+        "HISTORICAL",
+        "INTENDED"
+      ],
+      "title": "StatePlane",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "identity": {
+      "$ref": "#/$defs/ResourceIdentity"
+    },
+    "canonical_type": {
+      "title": "Canonical Type",
+      "type": "string"
+    },
+    "provider_type": {
+      "title": "Provider Type",
+      "type": "string"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ResourceProperty"
+      },
+      "title": "Properties"
+    },
+    "sensitive_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Sensitive Paths",
+      "type": "array"
+    },
+    "criticality": {
+      "$ref": "#/$defs/ResourceCriticality",
+      "default": "UNKNOWN"
+    },
+    "ownership": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Ownership",
+      "type": "array"
+    },
+    "tags": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "object"
+    },
+    "lifecycle": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Lifecycle",
+      "type": "object"
+    },
+    "provider_metadata": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Provider Metadata",
+      "type": "object"
+    },
+    "environment_metadata": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Environment Metadata",
+      "type": "object"
+    },
+    "evidence": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    }
+  },
+  "required": [
+    "identity",
+    "canonical_type",
+    "provider_type",
+    "properties"
+  ],
+  "title": "Resource",
+  "type": "object"
+}

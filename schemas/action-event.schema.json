@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/action-event/1.0",
+  "$defs": {
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "title": "Action Id",
+      "type": "string"
+    },
+    "actor": {
+      "enum": [
+        "ORCHESTRATOR",
+        "FAULT_INJECTOR",
+        "TARGET_AGENT",
+        "REFERENCE_AGENT",
+        "AWS_SERVICE"
+      ],
+      "title": "Actor",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "PROCESS",
+        "AWS_API",
+        "TERRAFORM",
+        "GIT",
+        "NETWORK",
+        "FILESYSTEM",
+        "HEALTH_CHECK"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "target": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target"
+    },
+    "request_hash": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "response_hash": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "started_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "ended_at": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/UtcTime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "SUCCEEDED",
+        "FAILED",
+        "DENIED",
+        "TIMED_OUT"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "exit_code": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exit Code"
+    },
+    "aws_request_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Aws Request Id"
+    },
+    "evidence": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    }
+  },
+  "required": [
+    "action_id",
+    "actor",
+    "kind",
+    "operation",
+    "target",
+    "request_hash",
+    "response_hash",
+    "started_at",
+    "ended_at",
+    "status"
+  ],
+  "title": "ActionEvent",
+  "type": "object"
+}

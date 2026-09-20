@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/coverage-record/1.0",
+  "$defs": {
+    "CoverageCell": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {
+          "title": "Dimension",
+          "type": "string"
+        },
+        "key": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Key",
+          "type": "array"
+        },
+        "eligible_weight": {
+          "exclusiveMinimum": 0.0,
+          "title": "Eligible Weight",
+          "type": "number"
+        },
+        "attempts": {
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "valid_trials": {
+          "minimum": 0,
+          "title": "Valid Trials",
+          "type": "integer"
+        },
+        "safe_passes": {
+          "minimum": 0,
+          "title": "Safe Passes",
+          "type": "integer"
+        },
+        "unsafe_passes": {
+          "minimum": 0,
+          "title": "Unsafe Passes",
+          "type": "integer"
+        },
+        "failures": {
+          "minimum": 0,
+          "title": "Failures",
+          "type": "integer"
+        },
+        "unknowns": {
+          "minimum": 0,
+          "title": "Unknowns",
+          "type": "integer"
+        },
+        "highest_fidelity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceClass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "last_attempt_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UtcTime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "dimension",
+        "key",
+        "eligible_weight",
+        "attempts",
+        "valid_trials",
+        "safe_passes",
+        "unsafe_passes",
+        "failures",
+        "unknowns"
+      ],
+      "title": "CoverageCell",
+      "type": "object"
+    },
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "generated_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "cells": {
+      "items": {
+        "$ref": "#/$defs/CoverageCell"
+      },
+      "title": "Cells",
+      "type": "array"
+    },
+    "gaps": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/Sha256"
+    }
+  },
+  "required": [
+    "subject_id",
+    "generated_at",
+    "cells",
+    "gaps",
+    "content_hash"
+  ],
+  "title": "CoverageRecord",
+  "type": "object"
+}

@@ -1,0 +1,527 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/fault-operator/1.0",
+  "$defs": {
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "FidelityRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "minimum": {
+          "$ref": "#/$defs/EvidenceClass"
+        },
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "forbidden_backends": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Backends",
+          "type": "array"
+        }
+      },
+      "required": [
+        "minimum",
+        "capabilities"
+      ],
+      "title": "FidelityRequirement",
+      "type": "object"
+    },
+    "HealthOracle": {
+      "additionalProperties": false,
+      "properties": {
+        "oracle_id": {
+          "title": "Oracle Id",
+          "type": "string"
+        },
+        "oracle_type": {
+          "enum": [
+            "HTTP",
+            "TCP",
+            "SQL",
+            "AWS_STATE",
+            "GRAPH_REACHABILITY",
+            "IAM_SIMULATION",
+            "COMMAND"
+          ],
+          "title": "Oracle Type",
+          "type": "string"
+        },
+        "config": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Config",
+          "type": "object"
+        },
+        "timeout_ms": {
+          "maximum": 300000,
+          "minimum": 100,
+          "title": "Timeout Ms",
+          "type": "integer"
+        },
+        "interval_ms": {
+          "maximum": 60000,
+          "minimum": 100,
+          "title": "Interval Ms",
+          "type": "integer"
+        },
+        "success_threshold": {
+          "default": 3,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Success Threshold",
+          "type": "integer"
+        },
+        "failure_threshold": {
+          "default": 3,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Failure Threshold",
+          "type": "integer"
+        },
+        "authoritative_fidelities": {
+          "items": {
+            "$ref": "#/$defs/EvidenceClass"
+          },
+          "title": "Authoritative Fidelities",
+          "type": "array"
+        }
+      },
+      "required": [
+        "oracle_id",
+        "oracle_type",
+        "config",
+        "timeout_ms",
+        "interval_ms",
+        "authoritative_fidelities"
+      ],
+      "title": "HealthOracle",
+      "type": "object"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "ParameterSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "json_schema": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Json Schema",
+          "type": "object"
+        },
+        "default": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "shrink_order": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Shrink Order",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "json_schema"
+      ],
+      "title": "ParameterSpec",
+      "type": "object"
+    },
+    "PredicateOperator": {
+      "enum": [
+        "EQ",
+        "NE",
+        "IN",
+        "NOT_IN",
+        "LTE",
+        "GTE",
+        "MATCHES",
+        "EXISTS",
+        "REACHABLE",
+        "HEALTHY"
+      ],
+      "title": "PredicateOperator",
+      "type": "string"
+    },
+    "RelationshipType": {
+      "enum": [
+        "NETWORK_DEPENDENCY",
+        "IDENTITY_DEPENDENCY",
+        "STORAGE_DEPENDENCY",
+        "ROUTING_DEPENDENCY",
+        "SECRET_DEPENDENCY",
+        "DEPLOYMENT_DEPENDENCY",
+        "CONFIGURATION_DEPENDENCY",
+        "TRIGGER_DEPENDENCY",
+        "OBSERVABILITY_DEPENDENCY",
+        "ATTACHMENT",
+        "CONTAINS"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "ScopeSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceId"
+          },
+          "title": "Canonical Ids",
+          "type": "array"
+        },
+        "terraform_addresses": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Terraform Addresses",
+          "type": "array"
+        },
+        "canonical_types": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Canonical Types",
+          "type": "array"
+        },
+        "tag_equals": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Tag Equals",
+          "type": "object"
+        },
+        "relationship_closure": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RelationshipType"
+          },
+          "title": "Relationship Closure",
+          "type": "array"
+        },
+        "max_depth": {
+          "default": 0,
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Max Depth",
+          "type": "integer"
+        }
+      },
+      "title": "ScopeSelector",
+      "type": "object"
+    },
+    "StabilizationPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "deadline_ms": {
+          "default": 120000,
+          "maximum": 1800000,
+          "minimum": 1000,
+          "title": "Deadline Ms",
+          "type": "integer"
+        },
+        "initial_delay_ms": {
+          "default": 500,
+          "maximum": 60000,
+          "minimum": 0,
+          "title": "Initial Delay Ms",
+          "type": "integer"
+        },
+        "backoff_multiplier": {
+          "default": 1.7,
+          "maximum": 4.0,
+          "minimum": 1.0,
+          "title": "Backoff Multiplier",
+          "type": "number"
+        },
+        "max_delay_ms": {
+          "default": 10000,
+          "maximum": 120000,
+          "minimum": 100,
+          "title": "Max Delay Ms",
+          "type": "integer"
+        },
+        "consecutive_equal_snapshots": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Consecutive Equal Snapshots",
+          "type": "integer"
+        },
+        "jitter_fraction": {
+          "default": 0.1,
+          "maximum": 0.5,
+          "minimum": 0.0,
+          "title": "Jitter Fraction",
+          "type": "number"
+        }
+      },
+      "title": "StabilizationPolicy",
+      "type": "object"
+    },
+    "StatePredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "predicate_id": {
+          "title": "Predicate Id",
+          "type": "string"
+        },
+        "selector": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "property_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Property Path"
+        },
+        "operator": {
+          "$ref": "#/$defs/PredicateOperator"
+        },
+        "expected": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "oracle_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Oracle Id"
+        },
+        "stabilization": {
+          "$ref": "#/$defs/StabilizationPolicy"
+        }
+      },
+      "required": [
+        "predicate_id",
+        "selector",
+        "operator",
+        "stabilization"
+      ],
+      "title": "StatePredicate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "operator_id": {
+      "title": "Operator Id",
+      "type": "string"
+    },
+    "implementation_version": {
+      "title": "Implementation Version",
+      "type": "string"
+    },
+    "family": {
+      "title": "Family",
+      "type": "string"
+    },
+    "target_resource_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Target Resource Types",
+      "type": "array"
+    },
+    "target_relationship_types": {
+      "items": {
+        "$ref": "#/$defs/RelationshipType"
+      },
+      "title": "Target Relationship Types",
+      "type": "array"
+    },
+    "parameters": {
+      "items": {
+        "$ref": "#/$defs/ParameterSpec"
+      },
+      "title": "Parameters",
+      "type": "array"
+    },
+    "applicability_predicates": {
+      "items": {
+        "additionalProperties": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "type": "object"
+      },
+      "title": "Applicability Predicates",
+      "type": "array"
+    },
+    "preconditions": {
+      "items": {
+        "$ref": "#/$defs/StatePredicate"
+      },
+      "title": "Preconditions",
+      "type": "array"
+    },
+    "fault_oracles": {
+      "items": {
+        "$ref": "#/$defs/HealthOracle"
+      },
+      "title": "Fault Oracles",
+      "type": "array"
+    },
+    "recovery_oracles": {
+      "items": {
+        "$ref": "#/$defs/HealthOracle"
+      },
+      "title": "Recovery Oracles",
+      "type": "array"
+    },
+    "cleanup_predicates": {
+      "items": {
+        "$ref": "#/$defs/StatePredicate"
+      },
+      "title": "Cleanup Predicates",
+      "type": "array"
+    },
+    "coverage_tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Coverage Tags",
+      "type": "array"
+    },
+    "fidelity": {
+      "$ref": "#/$defs/FidelityRequirement"
+    },
+    "risk": {
+      "$ref": "#/$defs/RiskLevel"
+    },
+    "composable": {
+      "title": "Composable",
+      "type": "boolean"
+    },
+    "incompatible_operator_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Incompatible Operator Ids",
+      "type": "array"
+    },
+    "max_instances_per_scenario": {
+      "default": 1,
+      "maximum": 8,
+      "minimum": 1,
+      "title": "Max Instances Per Scenario",
+      "type": "integer"
+    },
+    "expected_observables": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected Observables",
+      "type": "array"
+    },
+    "reference_repair_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reference Repair Id"
+    }
+  },
+  "required": [
+    "operator_id",
+    "implementation_version",
+    "family",
+    "target_resource_types",
+    "target_relationship_types",
+    "parameters",
+    "applicability_predicates",
+    "preconditions",
+    "fault_oracles",
+    "recovery_oracles",
+    "cleanup_predicates",
+    "coverage_tags",
+    "fidelity",
+    "risk",
+    "composable"
+  ],
+  "title": "FaultOperator",
+  "type": "object"
+}

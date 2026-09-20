@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/policy-reference/1.0",
+  "$defs": {
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "policy_id": {
+      "title": "Policy Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "bundle_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "entrypoint": {
+      "title": "Entrypoint",
+      "type": "string"
+    },
+    "priority": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Priority",
+      "type": "integer"
+    },
+    "non_overridable": {
+      "title": "Non Overridable",
+      "type": "boolean"
+    },
+    "source_uri": {
+      "title": "Source Uri",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_id",
+    "version",
+    "bundle_hash",
+    "entrypoint",
+    "priority",
+    "non_overridable",
+    "source_uri"
+  ],
+  "title": "PolicyReference",
+  "type": "object"
+}

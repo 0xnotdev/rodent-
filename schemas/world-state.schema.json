@@ -1,0 +1,423 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/world-state/1.0",
+  "$defs": {
+    "CanonicalResourceState": {
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/ResourceIdentity"
+        },
+        "canonical_type": {
+          "title": "Canonical Type",
+          "type": "string"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "$ref": "#/$defs/KnownValue"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "identity",
+        "canonical_type",
+        "attributes",
+        "observed_at",
+        "evidence"
+      ],
+      "title": "CanonicalResourceState",
+      "type": "object"
+    },
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "KnownValue": {
+      "additionalProperties": false,
+      "properties": {
+        "known": {
+          "title": "Known",
+          "type": "boolean"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "sensitive": {
+          "default": false,
+          "title": "Sensitive",
+          "type": "boolean"
+        },
+        "value_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "known"
+      ],
+      "title": "KnownValue",
+      "type": "object"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "ResourceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_id": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "terraform_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terraform Address"
+        },
+        "provider_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Address"
+        },
+        "arn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arn"
+        },
+        "account_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account Id"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "native_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Native Id"
+        }
+      },
+      "required": [
+        "canonical_id"
+      ],
+      "title": "ResourceIdentity",
+      "type": "object"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "StatePlane": {
+      "enum": [
+        "DECLARED",
+        "ACTUAL",
+        "HISTORICAL",
+        "INTENDED"
+      ],
+      "title": "StatePlane",
+      "type": "string"
+    },
+    "StateSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "world_id": {
+          "title": "World Id",
+          "type": "string"
+        },
+        "plane": {
+          "$ref": "#/$defs/StatePlane"
+        },
+        "taken_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "consistency_attempt": {
+          "minimum": 1,
+          "title": "Consistency Attempt",
+          "type": "integer"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "resources": {
+          "items": {
+            "$ref": "#/$defs/CanonicalResourceState"
+          },
+          "title": "Resources",
+          "type": "array"
+        },
+        "missing_capabilities": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Capabilities",
+          "type": "array"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/Sha256"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "world_id",
+        "plane",
+        "taken_at",
+        "consistency_attempt",
+        "complete",
+        "resources",
+        "content_hash"
+      ],
+      "title": "StateSnapshot",
+      "type": "object"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "world_id": {
+      "title": "World Id",
+      "type": "string"
+    },
+    "fidelity": {
+      "$ref": "#/$defs/EvidenceClass"
+    },
+    "backend_id": {
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "backend_version": {
+      "title": "Backend Version",
+      "type": "string"
+    },
+    "capability_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "snapshot": {
+      "$ref": "#/$defs/StateSnapshot"
+    }
+  },
+  "required": [
+    "world_id",
+    "fidelity",
+    "backend_id",
+    "backend_version",
+    "capability_hash",
+    "snapshot"
+  ],
+  "title": "WorldState",
+  "type": "object"
+}

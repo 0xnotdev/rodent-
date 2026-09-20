@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/invariant/1.0",
+  "$defs": {
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "InvariantKind": {
+      "enum": [
+        "STATE",
+        "TRAJECTORY",
+        "SCOPE",
+        "POLICY",
+        "TEMPORAL",
+        "COST"
+      ],
+      "title": "InvariantKind",
+      "type": "string"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "RelationshipType": {
+      "enum": [
+        "NETWORK_DEPENDENCY",
+        "IDENTITY_DEPENDENCY",
+        "STORAGE_DEPENDENCY",
+        "ROUTING_DEPENDENCY",
+        "SECRET_DEPENDENCY",
+        "DEPLOYMENT_DEPENDENCY",
+        "CONFIGURATION_DEPENDENCY",
+        "TRIGGER_DEPENDENCY",
+        "OBSERVABILITY_DEPENDENCY",
+        "ATTACHMENT",
+        "CONTAINS"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "ScopeSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceId"
+          },
+          "title": "Canonical Ids",
+          "type": "array"
+        },
+        "terraform_addresses": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Terraform Addresses",
+          "type": "array"
+        },
+        "canonical_types": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Canonical Types",
+          "type": "array"
+        },
+        "tag_equals": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Tag Equals",
+          "type": "object"
+        },
+        "relationship_closure": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RelationshipType"
+          },
+          "title": "Relationship Closure",
+          "type": "array"
+        },
+        "max_depth": {
+          "default": 0,
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Max Depth",
+          "type": "integer"
+        }
+      },
+      "title": "ScopeSelector",
+      "type": "object"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "invariant_id": {
+      "title": "Invariant Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/InvariantKind"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "expression": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Expression",
+      "type": "object"
+    },
+    "hard": {
+      "title": "Hard",
+      "type": "boolean"
+    },
+    "non_overridable": {
+      "title": "Non Overridable",
+      "type": "boolean"
+    },
+    "scope": {
+      "$ref": "#/$defs/ScopeSelector"
+    },
+    "active_from": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "active_until": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "source_priority": {
+      "title": "Source Priority",
+      "type": "integer"
+    },
+    "provenance": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Provenance",
+      "type": "array"
+    },
+    "confidence": {
+      "$ref": "#/$defs/Confidence"
+    }
+  },
+  "required": [
+    "invariant_id",
+    "kind",
+    "description",
+    "expression",
+    "hard",
+    "non_overridable",
+    "scope",
+    "active_from",
+    "active_until",
+    "source_priority",
+    "provenance",
+    "confidence"
+  ],
+  "title": "Invariant",
+  "type": "object"
+}

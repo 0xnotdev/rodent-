@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/health-oracle/1.0",
+  "$defs": {
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "oracle_id": {
+      "title": "Oracle Id",
+      "type": "string"
+    },
+    "oracle_type": {
+      "enum": [
+        "HTTP",
+        "TCP",
+        "SQL",
+        "AWS_STATE",
+        "GRAPH_REACHABILITY",
+        "IAM_SIMULATION",
+        "COMMAND"
+      ],
+      "title": "Oracle Type",
+      "type": "string"
+    },
+    "config": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Config",
+      "type": "object"
+    },
+    "timeout_ms": {
+      "maximum": 300000,
+      "minimum": 100,
+      "title": "Timeout Ms",
+      "type": "integer"
+    },
+    "interval_ms": {
+      "maximum": 60000,
+      "minimum": 100,
+      "title": "Interval Ms",
+      "type": "integer"
+    },
+    "success_threshold": {
+      "default": 3,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Success Threshold",
+      "type": "integer"
+    },
+    "failure_threshold": {
+      "default": 3,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Failure Threshold",
+      "type": "integer"
+    },
+    "authoritative_fidelities": {
+      "items": {
+        "$ref": "#/$defs/EvidenceClass"
+      },
+      "title": "Authoritative Fidelities",
+      "type": "array"
+    }
+  },
+  "required": [
+    "oracle_id",
+    "oracle_type",
+    "config",
+    "timeout_ms",
+    "interval_ms",
+    "authoritative_fidelities"
+  ],
+  "title": "HealthOracle",
+  "type": "object"
+}

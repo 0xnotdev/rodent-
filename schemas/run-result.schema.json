@@ -1,0 +1,525 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/run-result/1.0",
+  "$defs": {
+    "CheckStatus": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN"
+      ],
+      "title": "CheckStatus",
+      "type": "string"
+    },
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Effect": {
+      "additionalProperties": false,
+      "properties": {
+        "effect_id": {
+          "title": "Effect Id",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/SemanticCategory"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "property_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Property Path"
+        },
+        "before": {
+          "$ref": "#/$defs/KnownValue"
+        },
+        "after": {
+          "$ref": "#/$defs/KnownValue"
+        },
+        "risk": {
+          "$ref": "#/$defs/RiskLevel"
+        },
+        "reversible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reversible"
+        },
+        "direct_action_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Direct Action Ids",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "effect_id",
+        "category",
+        "resource_id",
+        "property_path",
+        "before",
+        "after",
+        "risk",
+        "reversible",
+        "direct_action_ids",
+        "evidence",
+        "confidence"
+      ],
+      "title": "Effect",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "KnownValue": {
+      "additionalProperties": false,
+      "properties": {
+        "known": {
+          "title": "Known",
+          "type": "boolean"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "sensitive": {
+          "default": false,
+          "title": "Sensitive",
+          "type": "boolean"
+        },
+        "value_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "known"
+      ],
+      "title": "KnownValue",
+      "type": "object"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "RunVerdict": {
+      "enum": [
+        "SAFE_PASS",
+        "UNSAFE_PASS",
+        "FAIL",
+        "UNKNOWN"
+      ],
+      "title": "RunVerdict",
+      "type": "string"
+    },
+    "SemanticCategory": {
+      "enum": [
+        "NETWORK_EXPOSURE_BROADENED",
+        "NETWORK_EXPOSURE_RESTRICTED",
+        "PRIVILEGE_EXPANDED",
+        "PRIVILEGE_REDUCED",
+        "PUBLIC_ACCESS_ENABLED",
+        "PUBLIC_ACCESS_DISABLED",
+        "ENCRYPTION_DISABLED",
+        "ENCRYPTION_ENABLED",
+        "PROTECTION_DISABLED",
+        "PROTECTION_ENABLED",
+        "STATEFUL_RESOURCE_DELETED",
+        "STATEFUL_RESOURCE_REPLACED",
+        "OUT_OF_SCOPE_RESOURCE_MUTATED",
+        "DEPENDENCY_BROKEN",
+        "DEPENDENCY_RESTORED",
+        "CAPACITY_REDUCED",
+        "CAPACITY_EXPANDED",
+        "TRIGGER_CREATED",
+        "TRIGGER_REMOVED",
+        "CONFIGURATION_CHANGED",
+        "UNKNOWN_CHANGE"
+      ],
+      "title": "SemanticCategory",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "INFO",
+        "WARNING",
+        "ERROR",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "TrialDisposition": {
+      "enum": [
+        "VALID",
+        "INVALID_INFRASTRUCTURE",
+        "INVALID_SCENARIO",
+        "INVALID_EVIDENCE",
+        "CANCELLED"
+      ],
+      "title": "TrialDisposition",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    },
+    "VerifierResult": {
+      "additionalProperties": false,
+      "properties": {
+        "verifier_id": {
+          "title": "Verifier Id",
+          "type": "string"
+        },
+        "verifier_version": {
+          "title": "Verifier Version",
+          "type": "string"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/CheckStatus"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "hard": {
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "resource_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceId"
+          },
+          "title": "Resource Ids",
+          "type": "array"
+        },
+        "effect_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Effect Ids",
+          "type": "array"
+        },
+        "event_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Event Ids",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "verifier_id",
+        "verifier_version",
+        "rule_id",
+        "status",
+        "severity",
+        "hard",
+        "message",
+        "evidence",
+        "confidence"
+      ],
+      "title": "VerifierResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "trial_id": {
+      "title": "Trial Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/TrialDisposition"
+    },
+    "verdict": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RunVerdict"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "goal_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CheckStatus"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "safety_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CheckStatus"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verifier_results": {
+      "items": {
+        "$ref": "#/$defs/VerifierResult"
+      },
+      "title": "Verifier Results",
+      "type": "array"
+    },
+    "effects": {
+      "items": {
+        "$ref": "#/$defs/Effect"
+      },
+      "title": "Effects",
+      "type": "array"
+    },
+    "started_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "ended_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "fidelity": {
+      "$ref": "#/$defs/EvidenceClass"
+    },
+    "manifest_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "event_chain_head": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "artifact_hashes": {
+      "items": {
+        "$ref": "#/$defs/Sha256"
+      },
+      "title": "Artifact Hashes",
+      "type": "array"
+    },
+    "warnings": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "run_id",
+    "trial_id",
+    "disposition",
+    "verdict",
+    "goal_status",
+    "safety_status",
+    "verifier_results",
+    "effects",
+    "started_at",
+    "ended_at",
+    "fidelity",
+    "manifest_hash",
+    "event_chain_head",
+    "artifact_hashes"
+  ],
+  "title": "RunResult",
+  "type": "object"
+}

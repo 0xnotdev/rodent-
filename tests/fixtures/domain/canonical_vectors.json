@@ -1,0 +1,10 @@
+{
+  "vectors": [
+    {
+      "name": "minimal-infrastructure-ir",
+      "model": "InfrastructureIR",
+      "canonical_json": "{\"generated_at\":\"2024-01-01T00:00:00.000000Z\",\"ir_id\":\"018f0d8e-3b26-7a4f-8d8e-111111111111\",\"provider_versions\":{\"aws\":\"5.0.0\",\"random\":\"3.6.0\"},\"relationships\":[],\"resources\":[],\"schema_version\":\"1.0\",\"source_hash\":\"sha256:0000000000000000000000000000000000000000000000000000000000000000\",\"terraform_version\":\"1.6.6\",\"unsupported\":[],\"warnings\":[]}",
+      "content_hash": "sha256:69d169f1275806e125856eb0a8986f6c0761a1cee5874fd6df54d8814cbaeea7"
+    }
+  ]
+}

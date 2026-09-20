@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "proof"
-version = "0.0.0+cp00"
-description = "CP-00 CLI skeleton for the Proof infrastructure-agent assurance engine."
+version = "0.0.0+cp01"
+description = "CP-01 domain schemas and canonical serialization for the Proof engine."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"
@@ -21,6 +21,8 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
+  "pydantic==2.10.6",
+  "rfc8785==0.1.4",
   "rich==13.9.4",
   "typer==0.20.0",
 ]

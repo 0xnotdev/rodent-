@@ -1,8 +1,9 @@
 # Proof
 
 Proof is the V0 infrastructure-agent assurance engine described by `spec.md`.
-This checkpoint contains only CP-00 repository, packaging, and quality-gate
-scaffolding: a reproducible Python package and the `proof` CLI skeleton.
+This checkpoint contains CP-00 repository scaffolding plus CP-01 domain schemas
+and canonical serialization. Later persistence, sandbox, Terraform, AWS, and run
+orchestration subsystems remain out of scope.
 
 Implemented CP-00 scope:
 
@@ -13,8 +14,18 @@ Implemented CP-00 scope:
   license allowlist checks, CycloneDX SBOM validation, and coverage XML validation.
 - Apache-2.0 license, security policy, and pinned-SHA CI workflows.
 
-Domain models, Docker, Terraform, AWS adapters, policy engines, sandboxing, and
-all later-checkpoint subsystems are intentionally out of scope for CP-00.
+Implemented CP-01 scope:
+
+- Strict, frozen Pydantic v2 domain models for `spec.md` §§8–9.
+- RFC 8785 canonical JSON bytes and SHA-256 content hashing that excludes
+  `content_hash` fields.
+- UUIDv7 helper, UTC timestamp validation/serialization, JSON value validation,
+  and sensitive `KnownValue` validation.
+- Generated JSON Schema snapshots and a hidden JSON-only `proof schema` developer
+  command.
+
+Persistence, Docker, Terraform execution, AWS adapters, policy engines,
+sandboxing, and all later-checkpoint subsystems are intentionally out of scope.
 
 ## Local verification
 
@@ -24,6 +35,7 @@ uv run ruff format --check .
 uv run ruff check .
 uv run mypy src
 uv run pytest tests/unit -q
+uv run pytest tests/unit/domain tests/contract/test_json_schemas.py -q
 uv build
 ```
 

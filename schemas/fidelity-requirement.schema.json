@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/fidelity-requirement/1.0",
+  "$defs": {
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "minimum": {
+      "$ref": "#/$defs/EvidenceClass"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "forbidden_backends": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Forbidden Backends",
+      "type": "array"
+    }
+  },
+  "required": [
+    "minimum",
+    "capabilities"
+  ],
+  "title": "FidelityRequirement",
+  "type": "object"
+}

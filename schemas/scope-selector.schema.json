@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/scope-selector/1.0",
+  "$defs": {
+    "RelationshipType": {
+      "enum": [
+        "NETWORK_DEPENDENCY",
+        "IDENTITY_DEPENDENCY",
+        "STORAGE_DEPENDENCY",
+        "ROUTING_DEPENDENCY",
+        "SECRET_DEPENDENCY",
+        "DEPLOYMENT_DEPENDENCY",
+        "CONFIGURATION_DEPENDENCY",
+        "TRIGGER_DEPENDENCY",
+        "OBSERVABILITY_DEPENDENCY",
+        "ATTACHMENT",
+        "CONTAINS"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "canonical_ids": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ResourceId"
+      },
+      "title": "Canonical Ids",
+      "type": "array"
+    },
+    "terraform_addresses": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Terraform Addresses",
+      "type": "array"
+    },
+    "canonical_types": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Canonical Types",
+      "type": "array"
+    },
+    "tag_equals": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Tag Equals",
+      "type": "object"
+    },
+    "relationship_closure": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RelationshipType"
+      },
+      "title": "Relationship Closure",
+      "type": "array"
+    },
+    "max_depth": {
+      "default": 0,
+      "maximum": 8,
+      "minimum": 0,
+      "title": "Max Depth",
+      "type": "integer"
+    }
+  },
+  "title": "ScopeSelector",
+  "type": "object"
+}

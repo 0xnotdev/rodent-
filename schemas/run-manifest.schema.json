@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/run-manifest/1.0",
+  "$defs": {
+    "AgentDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "executor": {
+          "enum": [
+            "SHELL",
+            "HARBOR"
+          ],
+          "title": "Executor",
+          "type": "string"
+        },
+        "image_digest": {
+          "title": "Image Digest",
+          "type": "string"
+        },
+        "command": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Command",
+          "type": "array"
+        },
+        "working_directory": {
+          "default": "/workspace",
+          "title": "Working Directory",
+          "type": "string"
+        },
+        "environment": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Environment",
+          "type": "object"
+        },
+        "model_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Id"
+        },
+        "model_parameters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Model Parameters",
+          "type": "object"
+        },
+        "tool_manifest_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mcp_manifest_hash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "timeout_ms": {
+          "default": 900000,
+          "minimum": 1000,
+          "title": "Timeout Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "agent_id",
+        "executor",
+        "image_digest",
+        "command"
+      ],
+      "title": "AgentDefinition",
+      "type": "object"
+    },
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    },
+    "WorldDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "world_id": {
+          "title": "World Id",
+          "type": "string"
+        },
+        "backend_id": {
+          "title": "Backend Id",
+          "type": "string"
+        },
+        "fidelity": {
+          "$ref": "#/$defs/EvidenceClass"
+        },
+        "image_or_template_digest": {
+          "title": "Image Or Template Digest",
+          "type": "string"
+        },
+        "region": {
+          "title": "Region",
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "capability_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "max_cost_micro_usd": {
+          "title": "Max Cost Micro Usd",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "world_id",
+        "backend_id",
+        "fidelity",
+        "image_or_template_digest",
+        "region",
+        "capabilities",
+        "capability_hash",
+        "max_cost_micro_usd"
+      ],
+      "title": "WorldDefinition",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "trial_id": {
+      "title": "Trial Id",
+      "type": "string"
+    },
+    "created_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "repo_commit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Repo Commit"
+    },
+    "repo_dirty_hash": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "terraform_version": {
+      "title": "Terraform Version",
+      "type": "string"
+    },
+    "provider_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Provider Versions",
+      "type": "object"
+    },
+    "terraform_lock_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "ir_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "scenario_manifest_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "generator_version": {
+      "title": "Generator Version",
+      "type": "string"
+    },
+    "operator_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Operator Versions",
+      "type": "object"
+    },
+    "run_seed": {
+      "title": "Run Seed",
+      "type": "integer"
+    },
+    "scenario_seed": {
+      "title": "Scenario Seed",
+      "type": "integer"
+    },
+    "world": {
+      "$ref": "#/$defs/WorldDefinition"
+    },
+    "agent": {
+      "$ref": "#/$defs/AgentDefinition"
+    },
+    "policy_hashes": {
+      "items": {
+        "$ref": "#/$defs/Sha256"
+      },
+      "title": "Policy Hashes",
+      "type": "array"
+    },
+    "context_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "contract_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "verifier_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Verifier Versions",
+      "type": "object"
+    },
+    "sandbox_image_digest": {
+      "title": "Sandbox Image Digest",
+      "type": "string"
+    },
+    "sandbox_profile_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "host_fingerprint": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Host Fingerprint",
+      "type": "object"
+    },
+    "replay_of_trial_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Replay Of Trial Id"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/Sha256"
+    }
+  },
+  "required": [
+    "run_id",
+    "trial_id",
+    "created_at",
+    "repo_commit",
+    "repo_dirty_hash",
+    "terraform_version",
+    "provider_versions",
+    "terraform_lock_hash",
+    "ir_hash",
+    "scenario_manifest_hash",
+    "generator_version",
+    "operator_versions",
+    "run_seed",
+    "scenario_seed",
+    "world",
+    "agent",
+    "policy_hashes",
+    "context_hash",
+    "contract_hash",
+    "verifier_versions",
+    "sandbox_image_digest",
+    "sandbox_profile_hash",
+    "host_fingerprint",
+    "content_hash"
+  ],
+  "title": "RunManifest",
+  "type": "object"
+}

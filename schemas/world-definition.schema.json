@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/world-definition/1.0",
+  "$defs": {
+    "EvidenceClass": {
+      "enum": [
+        "MODELLED",
+        "EMULATED",
+        "REAL_AWS"
+      ],
+      "title": "EvidenceClass",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "world_id": {
+      "title": "World Id",
+      "type": "string"
+    },
+    "backend_id": {
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "fidelity": {
+      "$ref": "#/$defs/EvidenceClass"
+    },
+    "image_or_template_digest": {
+      "title": "Image Or Template Digest",
+      "type": "string"
+    },
+    "region": {
+      "title": "Region",
+      "type": "string"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "capability_hash": {
+      "$ref": "#/$defs/Sha256"
+    },
+    "max_cost_micro_usd": {
+      "title": "Max Cost Micro Usd",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "world_id",
+    "backend_id",
+    "fidelity",
+    "image_or_template_digest",
+    "region",
+    "capabilities",
+    "capability_hash",
+    "max_cost_micro_usd"
+  ],
+  "title": "WorldDefinition",
+  "type": "object"
+}

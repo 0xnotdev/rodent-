@@ -1,0 +1,958 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proof://schema/context-envelope/1.0",
+  "$defs": {
+    "Approval": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_id": {
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "approver": {
+          "title": "Approver",
+          "type": "string"
+        },
+        "authority": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority",
+          "type": "array"
+        },
+        "approved_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "scope": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "effect_categories": {
+          "items": {
+            "$ref": "#/$defs/SemanticCategory"
+          },
+          "title": "Effect Categories",
+          "type": "array"
+        },
+        "signature_or_record_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "approval_id",
+        "approver",
+        "authority",
+        "approved_at",
+        "valid_from",
+        "expires_at",
+        "scope",
+        "effect_categories",
+        "signature_or_record_hash",
+        "provenance"
+      ],
+      "title": "Approval",
+      "type": "object"
+    },
+    "Assertion_Literal__DEV____TEST____STAGING____PROD_LIKE___": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "enum": [
+            "DEV",
+            "TEST",
+            "STAGING",
+            "PROD_LIKE"
+          ],
+          "title": "Value",
+          "type": "string"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[Literal['DEV', 'TEST', 'STAGING', 'PROD_LIKE']]",
+      "type": "object"
+    },
+    "Assertion_ResourceCriticality_": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/ResourceCriticality"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[ResourceCriticality]",
+      "type": "object"
+    },
+    "Assertion_ScopeSelector_": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[ScopeSelector]",
+      "type": "object"
+    },
+    "Assertion_Union_str__NoneType__": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[Union[str, NoneType]]",
+      "type": "object"
+    },
+    "Assertion_bool_": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "boolean"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[bool]",
+      "type": "object"
+    },
+    "Assertion_str_": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[str]",
+      "type": "object"
+    },
+    "Assertion_tuple_SemanticCategory__________": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "items": {
+            "$ref": "#/$defs/SemanticCategory"
+          },
+          "title": "Value",
+          "type": "array"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "asserted_by": {
+          "title": "Asserted By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "provenance",
+        "confidence",
+        "asserted_by"
+      ],
+      "title": "Assertion[tuple[SemanticCategory, ...]]",
+      "type": "object"
+    },
+    "Confidence": {
+      "enum": [
+        "CERTAIN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Constraint": {
+      "additionalProperties": false,
+      "properties": {
+        "constraint_id": {
+          "title": "Constraint Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "hard": {
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "scope": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "constraint_id",
+        "text",
+        "hard",
+        "scope",
+        "provenance",
+        "confidence"
+      ],
+      "title": "Constraint",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProvenanceKind"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "json_pointer": {
+          "default": "",
+          "title": "Json Pointer",
+          "type": "string"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "string"
+        },
+        "collector_version": {
+          "title": "Collector Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "redacted": {
+          "default": false,
+          "title": "Redacted",
+          "type": "boolean"
+        },
+        "summary": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "artifact_hash",
+        "observed_at",
+        "collector",
+        "collector_version",
+        "confidence",
+        "summary"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Intent": {
+      "additionalProperties": false,
+      "properties": {
+        "objective": {
+          "$ref": "#/$defs/Assertion_str_"
+        },
+        "task_description": {
+          "$ref": "#/$defs/Assertion_str_"
+        },
+        "target_scope": {
+          "$ref": "#/$defs/Assertion_ScopeSelector_"
+        },
+        "change_type": {
+          "$ref": "#/$defs/Assertion_str_"
+        },
+        "emergency": {
+          "$ref": "#/$defs/Assertion_bool_"
+        },
+        "success_predicates": {
+          "items": {
+            "$ref": "#/$defs/StatePredicate"
+          },
+          "title": "Success Predicates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "objective",
+        "task_description",
+        "target_scope",
+        "change_type",
+        "emergency",
+        "success_predicates"
+      ],
+      "title": "Intent",
+      "type": "object"
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "additionalProperties": {},
+          "type": "object"
+        }
+      ]
+    },
+    "PolicyReference": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "bundle_hash": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "entrypoint": {
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "priority": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "non_overridable": {
+          "title": "Non Overridable",
+          "type": "boolean"
+        },
+        "source_uri": {
+          "title": "Source Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_id",
+        "version",
+        "bundle_hash",
+        "entrypoint",
+        "priority",
+        "non_overridable",
+        "source_uri"
+      ],
+      "title": "PolicyReference",
+      "type": "object"
+    },
+    "PredicateOperator": {
+      "enum": [
+        "EQ",
+        "NE",
+        "IN",
+        "NOT_IN",
+        "LTE",
+        "GTE",
+        "MATCHES",
+        "EXISTS",
+        "REACHABLE",
+        "HEALTHY"
+      ],
+      "title": "PredicateOperator",
+      "type": "string"
+    },
+    "ProvenanceKind": {
+      "enum": [
+        "EXPLICIT_SCENARIO",
+        "ORG_POLICY",
+        "TERRAFORM_PLAN",
+        "TERRAFORM_SCHEMA",
+        "LIVE_API",
+        "CLOUDTRAIL",
+        "AWS_CONFIG",
+        "CHANGE_TICKET",
+        "HUMAN_APPROVAL",
+        "INCIDENT_RECORD",
+        "LLM_INFERENCE",
+        "HEURISTIC",
+        "REFERENCE_REPAIR"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "RelationshipType": {
+      "enum": [
+        "NETWORK_DEPENDENCY",
+        "IDENTITY_DEPENDENCY",
+        "STORAGE_DEPENDENCY",
+        "ROUTING_DEPENDENCY",
+        "SECRET_DEPENDENCY",
+        "DEPLOYMENT_DEPENDENCY",
+        "CONFIGURATION_DEPENDENCY",
+        "TRIGGER_DEPENDENCY",
+        "OBSERVABILITY_DEPENDENCY",
+        "ATTACHMENT",
+        "CONTAINS"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    },
+    "ResourceCriticality": {
+      "enum": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "CRITICAL",
+        "UNKNOWN"
+      ],
+      "title": "ResourceCriticality",
+      "type": "string"
+    },
+    "ResourceId": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+    },
+    "ScopeSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceId"
+          },
+          "title": "Canonical Ids",
+          "type": "array"
+        },
+        "terraform_addresses": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Terraform Addresses",
+          "type": "array"
+        },
+        "canonical_types": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Canonical Types",
+          "type": "array"
+        },
+        "tag_equals": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Tag Equals",
+          "type": "object"
+        },
+        "relationship_closure": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RelationshipType"
+          },
+          "title": "Relationship Closure",
+          "type": "array"
+        },
+        "max_depth": {
+          "default": 0,
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Max Depth",
+          "type": "integer"
+        }
+      },
+      "title": "ScopeSelector",
+      "type": "object"
+    },
+    "SemanticCategory": {
+      "enum": [
+        "NETWORK_EXPOSURE_BROADENED",
+        "NETWORK_EXPOSURE_RESTRICTED",
+        "PRIVILEGE_EXPANDED",
+        "PRIVILEGE_REDUCED",
+        "PUBLIC_ACCESS_ENABLED",
+        "PUBLIC_ACCESS_DISABLED",
+        "ENCRYPTION_DISABLED",
+        "ENCRYPTION_ENABLED",
+        "PROTECTION_DISABLED",
+        "PROTECTION_ENABLED",
+        "STATEFUL_RESOURCE_DELETED",
+        "STATEFUL_RESOURCE_REPLACED",
+        "OUT_OF_SCOPE_RESOURCE_MUTATED",
+        "DEPENDENCY_BROKEN",
+        "DEPENDENCY_RESTORED",
+        "CAPACITY_REDUCED",
+        "CAPACITY_EXPANDED",
+        "TRIGGER_CREATED",
+        "TRIGGER_REMOVED",
+        "CONFIGURATION_CHANGED",
+        "UNKNOWN_CHANGE"
+      ],
+      "title": "SemanticCategory",
+      "type": "string"
+    },
+    "Sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "StabilizationPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "deadline_ms": {
+          "default": 120000,
+          "maximum": 1800000,
+          "minimum": 1000,
+          "title": "Deadline Ms",
+          "type": "integer"
+        },
+        "initial_delay_ms": {
+          "default": 500,
+          "maximum": 60000,
+          "minimum": 0,
+          "title": "Initial Delay Ms",
+          "type": "integer"
+        },
+        "backoff_multiplier": {
+          "default": 1.7,
+          "maximum": 4.0,
+          "minimum": 1.0,
+          "title": "Backoff Multiplier",
+          "type": "number"
+        },
+        "max_delay_ms": {
+          "default": 10000,
+          "maximum": 120000,
+          "minimum": 100,
+          "title": "Max Delay Ms",
+          "type": "integer"
+        },
+        "consecutive_equal_snapshots": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Consecutive Equal Snapshots",
+          "type": "integer"
+        },
+        "jitter_fraction": {
+          "default": 0.1,
+          "maximum": 0.5,
+          "minimum": 0.0,
+          "title": "Jitter Fraction",
+          "type": "number"
+        }
+      },
+      "title": "StabilizationPolicy",
+      "type": "object"
+    },
+    "StatePredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "predicate_id": {
+          "title": "Predicate Id",
+          "type": "string"
+        },
+        "selector": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "property_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Property Path"
+        },
+        "operator": {
+          "$ref": "#/$defs/PredicateOperator"
+        },
+        "expected": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "oracle_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Oracle Id"
+        },
+        "stabilization": {
+          "$ref": "#/$defs/StabilizationPolicy"
+        }
+      },
+      "required": [
+        "predicate_id",
+        "selector",
+        "operator",
+        "stabilization"
+      ],
+      "title": "StatePredicate",
+      "type": "object"
+    },
+    "TemporaryException": {
+      "additionalProperties": false,
+      "properties": {
+        "exception_id": {
+          "title": "Exception Id",
+          "type": "string"
+        },
+        "invariant_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Invariant Ids",
+          "type": "array"
+        },
+        "scope": {
+          "$ref": "#/$defs/ScopeSelector"
+        },
+        "allowed_effects": {
+          "items": {
+            "$ref": "#/$defs/SemanticCategory"
+          },
+          "title": "Allowed Effects",
+          "type": "array"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "cleanup_deadline": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "cleanup_predicates": {
+          "items": {
+            "$ref": "#/$defs/StatePredicate"
+          },
+          "title": "Cleanup Predicates",
+          "type": "array"
+        },
+        "approval_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Approval Ids",
+          "type": "array"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "provenance": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Provenance",
+          "type": "array"
+        }
+      },
+      "required": [
+        "exception_id",
+        "invariant_ids",
+        "scope",
+        "allowed_effects",
+        "valid_from",
+        "expires_at",
+        "cleanup_deadline",
+        "cleanup_predicates",
+        "approval_ids",
+        "reason",
+        "provenance"
+      ],
+      "title": "TemporaryException",
+      "type": "object"
+    },
+    "UtcTime": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "context_id": {
+      "title": "Context Id",
+      "type": "string"
+    },
+    "intent": {
+      "$ref": "#/$defs/Intent"
+    },
+    "authorized_scope": {
+      "$ref": "#/$defs/Assertion_ScopeSelector_"
+    },
+    "protected_scope": {
+      "$ref": "#/$defs/Assertion_ScopeSelector_"
+    },
+    "allowed_effects": {
+      "$ref": "#/$defs/Assertion_tuple_SemanticCategory__________"
+    },
+    "forbidden_effects": {
+      "$ref": "#/$defs/Assertion_tuple_SemanticCategory__________"
+    },
+    "hard_constraints": {
+      "items": {
+        "$ref": "#/$defs/Constraint"
+      },
+      "title": "Hard Constraints",
+      "type": "array"
+    },
+    "soft_constraints": {
+      "items": {
+        "$ref": "#/$defs/Constraint"
+      },
+      "title": "Soft Constraints",
+      "type": "array"
+    },
+    "organization_policies": {
+      "items": {
+        "$ref": "#/$defs/PolicyReference"
+      },
+      "title": "Organization Policies",
+      "type": "array"
+    },
+    "environment_class": {
+      "$ref": "#/$defs/Assertion_Literal__DEV____TEST____STAGING____PROD_LIKE___"
+    },
+    "environment_criticality": {
+      "$ref": "#/$defs/Assertion_ResourceCriticality_"
+    },
+    "approvals": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Approval"
+      },
+      "title": "Approvals",
+      "type": "array"
+    },
+    "temporary_exceptions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TemporaryException"
+      },
+      "title": "Temporary Exceptions",
+      "type": "array"
+    },
+    "cleanup_requirements": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/StatePredicate"
+      },
+      "title": "Cleanup Requirements",
+      "type": "array"
+    },
+    "incident_reference": {
+      "$ref": "#/$defs/Assertion_Union_str__NoneType__"
+    },
+    "valid_from": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/UtcTime"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/Sha256"
+    }
+  },
+  "required": [
+    "context_id",
+    "intent",
+    "authorized_scope",
+    "protected_scope",
+    "allowed_effects",
+    "forbidden_effects",
+    "hard_constraints",
+    "soft_constraints",
+    "organization_policies",
+    "environment_class",
+    "environment_criticality",
+    "incident_reference",
+    "valid_from",
+    "expires_at",
+    "content_hash"
+  ],
+  "title": "ContextEnvelope",
+  "type": "object"
+}

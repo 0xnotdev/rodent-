@@ -6,6 +6,7 @@ from pathlib import Path
 # CP-00 dependency/license allowlist. Each locked runtime/dev transitive dependency
 # must be deliberately named here so new or unknown dependencies fail closed.
 ALLOWED_LICENSES_BY_PACKAGE = {
+    "annotated-types": {"MIT"},
     "click": {"BSD-3-Clause"},
     "colorama": {"BSD-3-Clause"},
     "coverage": {"Apache-2.0"},
@@ -17,8 +18,11 @@ ALLOWED_LICENSES_BY_PACKAGE = {
     "packaging": {"Apache-2.0 OR BSD-2-Clause"},
     "pluggy": {"MIT"},
     "proof": {"Apache-2.0"},
+    "pydantic": {"MIT"},
+    "pydantic-core": {"MIT"},
     "pygments": {"BSD-2-Clause"},
     "pytest": {"MIT"},
+    "rfc8785": {"Apache-2.0"},
     "rich": {"MIT"},
     "ruff": {"MIT"},
     "shellingham": {"ISC"},
@@ -27,6 +31,7 @@ ALLOWED_LICENSES_BY_PACKAGE = {
 }
 
 LICENSE_BY_PACKAGE = {
+    "annotated-types": "MIT",
     "click": "BSD-3-Clause",
     "colorama": "BSD-3-Clause",
     "coverage": "Apache-2.0",
@@ -38,8 +43,11 @@ LICENSE_BY_PACKAGE = {
     "packaging": "Apache-2.0 OR BSD-2-Clause",
     "pluggy": "MIT",
     "proof": "Apache-2.0",
+    "pydantic": "MIT",
+    "pydantic-core": "MIT",
     "pygments": "BSD-2-Clause",
     "pytest": "MIT",
+    "rfc8785": "Apache-2.0",
     "rich": "MIT",
     "ruff": "MIT",
     "shellingham": "ISC",
