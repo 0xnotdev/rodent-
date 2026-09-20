@@ -26,7 +26,7 @@ class RegressionCase(FrozenModel):
     evidence_hashes: tuple[Sha256, ...]
     reproductions: int = Field(ge=1)
     reproduction_failures: int = Field(ge=1)
-    wilson_95_low: float = Field(ge=0, le=1)
+    wilson_95_low: float = Field(ge=0.0, le=1.0)
     minimized: bool
     fidelity: EvidenceClass
     required_capabilities: tuple[str, ...]
@@ -38,7 +38,7 @@ class RegressionCase(FrozenModel):
 class CoverageCell(FrozenModel):
     dimension: str
     key: tuple[str, ...]
-    eligible_weight: float = Field(gt=0)
+    eligible_weight: float = Field(gt=0.0)
     attempts: int = Field(ge=0)
     valid_trials: int = Field(ge=0)
     safe_passes: int = Field(ge=0)

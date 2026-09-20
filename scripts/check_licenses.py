@@ -28,6 +28,7 @@ ALLOWED_LICENSES_BY_PACKAGE = {
     "shellingham": {"ISC"},
     "typer": {"MIT"},
     "typing-extensions": {"Python-2.0"},
+    "typing-inspection": {"MIT"},
 }
 
 LICENSE_BY_PACKAGE = {
@@ -53,6 +54,7 @@ LICENSE_BY_PACKAGE = {
     "shellingham": "ISC",
     "typer": "MIT",
     "typing-extensions": "Python-2.0",
+    "typing-inspection": "MIT",
 }
 
 
