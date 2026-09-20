@@ -1,0 +1,27 @@
+# Local Python environments
+.venv/
+venv/
+
+# Build and verification artifacts
+dist/
+build/
+*.egg-info/
+artifacts/
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Private local context state
+.ctx/
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
